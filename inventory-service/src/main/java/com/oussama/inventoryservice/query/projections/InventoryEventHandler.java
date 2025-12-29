@@ -2,6 +2,7 @@ package com.oussama.inventoryservice.query.projections;
 
 import com.oussama.inventoryservice.common.api.events.CategoryCreatedEvent;
 import com.oussama.inventoryservice.common.api.events.ProductCreatedEvent;
+import com.oussama.inventoryservice.common.api.events.ProductQuantityDeductedEvent;
 import com.oussama.inventoryservice.common.api.events.ProductStatusUpdatedEvent;
 import com.oussama.inventoryservice.query.entities.Category;
 import com.oussama.inventoryservice.query.entities.Product;
@@ -42,6 +43,14 @@ public class InventoryEventHandler {
     public void on(ProductStatusUpdatedEvent event) {
         productRepository.findById(event.getId()).ifPresent(product -> {
             product.setStatus(event.getStatus());
+            productRepository.save(product);
+        });
+    }
+
+    @EventHandler
+    public void on(ProductQuantityDeductedEvent event) {
+        productRepository.findById(event.getId()).ifPresent(product -> {
+            product.setQuantity(product.getQuantity() - event.getQuantity());
             productRepository.save(product);
         });
     }

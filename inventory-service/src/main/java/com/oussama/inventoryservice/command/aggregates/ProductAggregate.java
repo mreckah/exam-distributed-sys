@@ -1,9 +1,11 @@
 package com.oussama.inventoryservice.command.aggregates;
 
 import com.oussama.inventoryservice.common.api.commands.CreateProductCommand;
+import com.oussama.inventoryservice.common.api.commands.DeductProductQuantityCommand;
 import com.oussama.inventoryservice.common.api.commands.UpdateProductStatusCommand;
 import com.oussama.inventoryservice.common.api.enums.InventoryStatus;
 import com.oussama.inventoryservice.common.api.events.ProductCreatedEvent;
+import com.oussama.inventoryservice.common.api.events.ProductQuantityDeductedEvent;
 import com.oussama.inventoryservice.common.api.events.ProductStatusUpdatedEvent;
 import org.axonframework.commandhandling.CommandHandler;
 import org.axonframework.eventsourcing.EventSourcingHandler;
@@ -42,6 +44,16 @@ public class ProductAggregate {
                 command.getStatus()));
     }
 
+    @CommandHandler
+    public void handle(DeductProductQuantityCommand command) {
+        if (this.quantity < command.getQuantity()) {
+            throw new RuntimeException("Insufficient quantity for product: " + command.getId());
+        }
+        AggregateLifecycle.apply(new ProductQuantityDeductedEvent(
+                command.getId(),
+                command.getQuantity()));
+    }
+
     @EventSourcingHandler
     public void on(ProductCreatedEvent event) {
         this.id = event.getId();
@@ -55,5 +67,10 @@ public class ProductAggregate {
     @EventSourcingHandler
     public void on(ProductStatusUpdatedEvent event) {
         this.status = event.getStatus();
+    }
+
+    @EventSourcingHandler
+    public void on(ProductQuantityDeductedEvent event) {
+        this.quantity -= event.getQuantity();
     }
 }
