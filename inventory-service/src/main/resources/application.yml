@@ -40,3 +40,10 @@ axon:
       event-processor-mode: tracking
     fetcher:
       poll-timeout: 3000
+
+springdoc:
+  swagger-ui:
+    path: /swagger-ui.html
+    operationsSorter: method
+  api-docs:
+    path: /v3/api-docs
