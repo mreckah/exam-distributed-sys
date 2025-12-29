@@ -22,6 +22,12 @@ spring:
             - Path=/order-service/**
           filters:
             - RewritePath=/order-service/(?<path>.*), /$\{path}
+        - id: analytics-service
+          uri: lb://analytics-service
+          predicates:
+            - Path=/analytics-service/**
+          filters:
+            - RewritePath=/analytics-service/(?<path>.*), /$\{path}
 
 eureka:
   client:
@@ -36,3 +42,5 @@ springdoc:
         url: /inventory-service/v3/api-docs
       - name: Order Service
         url: /order-service/v3/api-docs
+      - name: Analytics Service
+        url: /analytics-service/v3/api-docs
