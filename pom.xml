@@ -14,12 +14,7 @@
 	<packaging>pom</packaging>
 
 	<modules>
-		<module>discovery-service</module>
-		<module>gateway-service</module>
-		<module>config-service</module>
-		<module>core-api</module>
-		<module>command-service</module>
-		<module>query-service</module>
+		<module>inventory-service</module>
 	</modules>
 
 	<properties>
